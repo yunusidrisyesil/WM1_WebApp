@@ -26,12 +26,12 @@ namespace FirstMVCProject.Controllers
 
         public IActionResult Detail(int? id)
         {
-            var categoty = _context.Categories.FirstOrDefault(x => x.CategoryId == id);
-            if(categoty == null)
+            var category = _context.Categories.Include(x => x.Products).FirstOrDefault(x => x.CategoryId == id);
+            if(category == null)
             {
                 return RedirectToAction(nameof(Index),"Home");
             }
-            return View(categoty);
+            return View(category);
         }
     }
 }
