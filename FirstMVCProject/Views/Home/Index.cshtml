@@ -1,0 +1,22 @@
+﻿@model List<Urun>
+@{
+    ViewData["Title"] = "Home Page";
+
+    //var model = ProductManager.GetProducts();
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="/Category/Index">building Web apps with ASP.NET Core</a>.</p>
+    <ul>
+        @*foreach (var item in model)
+        {
+            <li>@item.Name - @item.Price</li>
+        }*@
+
+        @foreach (var item in Model)
+        {
+            <li>@item.Name - @item.Price</li>
+        }
+    </ul>
+</div>
