@@ -1,5 +1,6 @@
 ﻿using FirstMVCProject.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 namespace FirstMVCProject.Controllers
@@ -16,7 +17,7 @@ namespace FirstMVCProject.Controllers
 
         public IActionResult Index(int? id)
         {
-            var product = _context.Products.FirstOrDefault(x => x.ProductId == id);
+            var product = _context.Products.Include(x => x.Supplier).FirstOrDefault(x => x.ProductId == id);
             if (product == null)
             {
                 return RedirectToAction(nameof(Index), "Home");
