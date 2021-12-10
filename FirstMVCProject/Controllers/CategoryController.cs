@@ -1,4 +1,5 @@
 ﻿using FirstMVCProject.Models;
+using FirstMVCProject.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -44,6 +45,91 @@ namespace FirstMVCProject.Controllers
         public IActionResult Create()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(CategoryViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var category = new Category()
+            {
+                //CategoryId = 1, Hata verdirmek için
+                CategoryName = model.CategoryName,
+                Description = model.Description,
+            };
+            _context.Categories.Add(category);
+            try
+            {
+                _context.SaveChanges();
+                return RedirectToAction("Detail", new { id = category.CategoryId });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, $"{model.CategoryName} eklenirken bir hata oluştu. Daha sonra tekrar deneyiniz.");
+                return View(model);
+            }
+            //return View();
+        }
+
+        public IActionResult Delete(int? categoryId)
+        {
+            var delete = _context.Categories.FirstOrDefault(c => c.CategoryId == categoryId);
+            try
+            {
+                _context.Categories.Remove(delete);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction(nameof(Detail), new { categoryId });
+            }
+            TempData["Delelted_Category"] = delete.CategoryName;
+            return RedirectToAction(nameof(Index));
+        }
+        
+        public IActionResult Update(int? categoryId)
+        {
+            var category = _context.Categories.FirstOrDefault(x => x.CategoryId == categoryId);
+            if (category == null) return RedirectToAction(nameof(Index));
+
+            var model = new CategoryViewModel()
+            {
+                CategoryId = category.CategoryId,
+                CategoryName = category.CategoryName,
+                Description = category.Description,
+            };
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Update(CategoryViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var category = _context.Categories.FirstOrDefault(x => x.CategoryId == model.CategoryId);
+
+            try
+            {
+                category.CategoryName = model.CategoryName;
+                category.Description = model.Description;
+
+                _context.Categories.Update(category);
+                _context.SaveChanges();
+
+                return RedirectToAction("Detail", new {id = category.CategoryId });
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError(string.Empty, $"{model.CategoryName} güncellerken bir hata oluştu");
+            }
+
+            return View(model);
+
         }
     }
 }

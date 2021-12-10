@@ -1,7 +1,9 @@
 ﻿@model Category
 
 <div class="row">
-    <div class="col-md-2"></div>
+    <div class="col-md-2">
+        <a class="btn bg-danger" asp-action="Delete" asp-controller="Category" asp-route-categoryId=@Model.CategoryId>Delete</a>
+    </div>
     <div class="col-md-8">
         <h5>@Model.CategoryName</h5>
         <h5>@Model.Description</h5>
@@ -23,7 +25,7 @@
                     </tr>
                 }
             </tbody>
-        </table
+        </table>
     </div>
     <div class="col-md-2"></div>
 </div>
