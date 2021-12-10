@@ -1,0 +1,15 @@
+﻿@model Category
+
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <form asp-action="Create" asp-controller="Category" method="post">
+                <label>Category Name</label><br />
+                <input asp-for="CategoryName" /><br /><br />
+                <label>Description</label><br />
+                <input asp-for="Description" /><br /><br />
+                <input type="submit"  value="Add" class="btn btn-success"/>
+            </form>
+        </div>
+        <div class="col-md-2"></div>
+    </div>

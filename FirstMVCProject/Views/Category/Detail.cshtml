@@ -1,7 +1,5 @@
 ﻿@model Category
 
-
-
 <div class="row">
     <div class="col-md-2"></div>
     <div class="col-md-8">
@@ -11,6 +9,8 @@
             <thead>
                 <tr>
                     <th>Product Name</th>
+                    <th>Total Order</th>
+                    <th>Volume</th>
                 </tr>
             </thead>
             <tbody>
@@ -18,11 +18,12 @@
                 {
                     <tr>
                         <td><a asp-action="Index" asp-controller="Product" asp-route-id="@item.ProductId" >@item.ProductName</a></td>
+                        <td>@item.OrderDetails.Count</td>
+                        <td>@item.OrderDetails.Sum(x=> x.UnitPrice*x.Quantity* (decimal)(1-x.Discount))</td>
                     </tr>
                 }
             </tbody>
-        </table>
-
+        </table
     </div>
     <div class="col-md-2"></div>
 </div>
