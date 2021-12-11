@@ -1,0 +1,21 @@
+﻿@model EmployeeViewModel
+
+
+<div class="text-danger">
+        <div asp-validation-summary="All"></div>
+    </div>
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <form asp-action="Create" asp-controller="Employee" method="post">
+            <label asp-for="FirstName"></label><br />
+            <input asp-for="FirstName" /><br />
+            <span class="text-danger" asp-validation-for="FirstName"></span>  <br /><br />
+            <label asp-for="LastName"></label><br />
+            <input asp-for="LastName" /><br /><br />
+            <span class="text-danger" asp-validation-for="LastName"></span>
+            <input type="submit" value="Add" class="btn btn-success" />
+        </form>
+    </div>
+    <div class="col-md-2"></div>
+</div>

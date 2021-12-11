@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,14 +28,17 @@ namespace FirstMVCProject.Controllers
 
         public IActionResult Detail(int? id)
         {
+            //Left join
             var category = _context.Categories.Include(x => x.Products).ThenInclude(x=> x.OrderDetails)
                             .ThenInclude(x=> x.Order).FirstOrDefault(x => x.CategoryId == id);
 
+            //Inner join
             //var category2 = from cat in _context.Categories
             //                join prod in _context.Products on cat.CategoryId equals prod.CategoryId
             //                join odetail in _context.OrderDetails on prod.ProductId equals odetail.ProductId
             //                where cat.CategoryId == id
             //                select cat;
+
             if(category == null)
             {
                 return RedirectToAction(nameof(Index),"Home");
@@ -87,13 +91,13 @@ namespace FirstMVCProject.Controllers
             {
                 return RedirectToAction(nameof(Detail), new { categoryId });
             }
-            TempData["Delelted_Category"] = delete.CategoryName;
+            TempData["Deleted_Category"] = delete.CategoryName;
             return RedirectToAction(nameof(Index));
         }
         
-        public IActionResult Update(int? categoryId)
+        public IActionResult Update(int? id)
         {
-            var category = _context.Categories.FirstOrDefault(x => x.CategoryId == categoryId);
+            var category = _context.Categories.FirstOrDefault(x => x.CategoryId == id);
             if (category == null) return RedirectToAction(nameof(Index));
 
             var model = new CategoryViewModel()
@@ -102,8 +106,9 @@ namespace FirstMVCProject.Controllers
                 CategoryName = category.CategoryName,
                 Description = category.Description,
             };
-            return View();
+            return View(model);
         }
+
         [HttpPost]
         public IActionResult Update(CategoryViewModel model)
         {

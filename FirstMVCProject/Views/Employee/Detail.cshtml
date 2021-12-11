@@ -1,0 +1,30 @@
+﻿@model Employee
+
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <div class="row bg-primary">
+            <input type="button" class="btn btn-primary" value="Edit" asp-controller="Employee" asp-action="Update" asp-route-id="@Model.EmployeeId" />
+            <input type="button" class="btn btn-danger" value="Delete" asp-controller="Employee" asp-action="Delete" asp-route-id="@Model.EmployeeId" />
+        </div>
+        <div class ="row">
+            <div class="col-md-2">
+                <img src="https://assets.dogannet.tv/img/75/740x0/5ede49f4ae298b9724fe0858" style="width:150px;height:200px"/>
+            </div>
+            <div class="col-md-4">
+                <label>Firstname : @Model.FirstName</label> <br />
+                <label>Lastname : @Model.LastName</label> <br />
+                <label>Birthdate : @Model.BirthDate.Value.Day/@Model.BirthDate.Value.Month/@Model.BirthDate.Value.Year</label><br />
+                <label>Home Phone : @Model.HomePhone</label>
+            </div>
+
+            <div class="col-md-5">
+                <label>Title : @Model.Title</label><br />
+                <label>Title Courtesy : @Model.TitleOfCourtesy</label><br />
+                <label>Hire Date : @Model.HireDate.Value.Day/@Model.HireDate.Value.Month/@Model.HireDate.Value.Year</label><br />
+                <label>Address : @Model.Address/@Model.City/@Model.Country</label>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+</div>
