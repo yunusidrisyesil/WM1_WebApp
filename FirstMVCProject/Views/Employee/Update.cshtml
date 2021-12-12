@@ -7,7 +7,8 @@
 <div class="row">
     <div class="col-md-2"></div>
     <div class="col-md-8">
-        <form asp-action="Create" asp-controller="Employee" method="post">
+        <form asp-action="Update" asp-controller="Employee" method="post">
+            <input asp-for="EmployeeId" type="hidden" />
             <label asp-for="FirstName"></label><br />
             <input asp-for="FirstName" /><br />
             <span class="text-danger" asp-validation-for="FirstName"></span>  <br /><br />
@@ -31,7 +32,7 @@
             <label asp-for="HomePhone"></label><br />
             <input asp-for="HomePhone" /><br /><br />
             
-            <input type="submit" value="Add" class="btn btn-success" />
+            <input type="submit" value="Update" class="btn btn-success" />
         </form>
     </div>
     <div class="col-md-2"></div>

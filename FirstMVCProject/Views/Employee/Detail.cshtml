@@ -4,8 +4,8 @@
     <div class="col-md-1"></div>
     <div class="col-md-10">
         <div class="row bg-primary">
-            <input type="button" class="btn btn-primary" value="Edit" asp-controller="Employee" asp-action="Update" asp-route-id="@Model.EmployeeId" />
-            <input type="button" class="btn btn-danger" value="Delete" asp-controller="Employee" asp-action="Delete" asp-route-id="@Model.EmployeeId" />
+            <a class="btn btn-primary" asp-controller="Employee" asp-action="Update" asp-route-id="@Model.EmployeeId" >Edit</a>
+            <a class="btn btn-danger"  asp-controller="Employee" asp-action="Delete" asp-route-id="@Model.EmployeeId">Delete</a>
         </div>
         <div class ="row">
             <div class="col-md-2">
