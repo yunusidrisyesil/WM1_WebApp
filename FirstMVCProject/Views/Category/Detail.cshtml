@@ -19,7 +19,7 @@
                 @foreach(var item in Model.Products)
                 {
                     <tr>
-                        <td><a asp-action="Index" asp-controller="Product" asp-route-id="@item.ProductId" >@item.ProductName</a></td>
+                        <td><a asp-action="Detail" asp-controller="Product" asp-route-id="@item.ProductId" >@item.ProductName</a></td>
                         <td>@item.OrderDetails.Count</td>
                         <td>@item.OrderDetails.Sum(x=> x.UnitPrice*x.Quantity* (decimal)(1-x.Discount))</td>
                     </tr>

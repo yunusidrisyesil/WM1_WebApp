@@ -1,0 +1,34 @@
+﻿@model ProductViewModel
+
+<div class=row>
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <h3>@Model.ProductName</h3>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="w-100 mt-3">
+                    <img src="https://assets.dogannet.tv/img/75/740x0/5ede49f4ae298b9724fe0858" style="width:100%;height:200px;" />
+                </div>
+
+            </div>
+            <div class="col-md-7">
+                <div class="mt-2">
+                    @*<label>Supplier Name : @Model.Supplier.CompanyName</label><br />
+                    <label>Quantity Per Unit : @Model.QuantityPerUnit </label><br />
+                    <label>Unit Price : @Model.UnitPrice </label><br />
+                    <label>Units in Stock : @Model.UnitsInStock</label><br />
+                    <label>Units on Order : @Model.UnitsOnOrder </label><br />
+                    <label>Reordered Level : @Model.ReorderLevel</label><br />
+                    <label>Discountinued : @Model.Discontinued </label><br />*@
+                    <label>Category : @(Model.CategoryId == null ? "Not found" : Model.CategoryName)</label><br />
+                    <label>Supplier : @(Model.SupplierId == null ? "Not found" : Model.CompanyName)</label><br />
+                    <label>Unit Price : @($"{Model.UnitPrice:c2}")</label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-2">
+        <a class="btn btn-primary" asp-action="Update" asp-controller="Product" asp-route-id="@Model.ProductId">Edit</a>
+    </div>
+</div>

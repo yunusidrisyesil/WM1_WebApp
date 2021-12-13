@@ -1,0 +1,20 @@
+﻿@model ProductViewModel
+
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <form method="post" asp-action="Update" asp-controller="Product">
+            <input asp-for="ProductId" type="hidden" />
+            <label asp-for="ProductName"></label><br />
+            <input asp-for="ProductName" /><br /><br />
+            <label asp-for="CategoryName"></label><br />
+            <select asp-for="CategoryId" asp-items="ViewBag.CategoryList" class="form-control"></select><br /><br />
+            <label asp-for="CompanyName"></label><br />
+            <select asp-for="SupplierId" asp-items="ViewBag.SupplierList" class="form-control"></select><br /><br />
+            <label asp-for="UnitPrice"></label><br />
+            <input asp-for="UnitPrice" /><br /><br />
+            <input type="submit" value="Save" class="btn btn-success" />
+        </form>
+    </div>
+    <div class="col-md-3"></div>
+</div> 
