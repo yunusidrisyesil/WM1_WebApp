@@ -42,7 +42,7 @@ namespace FirstMVCProject.Controllers
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 Title = model.Title,
-                BirthDate = model.BirthDate,
+                BirthDate = Convert.ToDateTime(model.BirthDate),
                 HireDate = DateTime.Now,
                 Address = model.Address,
                 City = model.City,
@@ -99,6 +99,7 @@ namespace FirstMVCProject.Controllers
                 City = employee.City,
                 Country = employee.Country,
                 HireDate = (DateTime)employee.HireDate,
+                HomePhone = employee.HomePhone,
             };
             return View(model);
         }
@@ -117,7 +118,7 @@ namespace FirstMVCProject.Controllers
             {
                 employee.FirstName = model.FirstName;
                 employee.LastName = model.LastName;
-                employee.BirthDate = model.BirthDate;
+                employee.BirthDate = Convert.ToDateTime(model.BirthDate);
                 employee.Title = model.Title;
                 employee.Address = model.Address;
                 employee.City = model.City;
