@@ -5,7 +5,7 @@
 <div class="row">
     <div class="col-md-2"></div>
     <div class="col-md-8">
-        <form asp-action="Create" asp-controller="Category" method="post">
+        <form id="frm_add">
             <label asp-for="CategoryName"></label><br />
             <input asp-for="CategoryName" /><br />
             <span class="text-danger" asp-validation-for="CategoryName"></span>  <br /><br />
@@ -17,3 +17,33 @@
     </div>
     <div class="col-md-2"></div>
 </div>
+
+@section Scripts
+{
+    <script>
+        $(function(){
+            $("#frm_add").submit(function(e){
+                e.preventDefault();
+                var model = {
+                    CategoryName : $("#CategoryName").val(),
+                    Description : $("#Description").val()
+                };
+                $.ajax({
+                    headers: { 'Accept': 'application/json',
+                        'Content-Type': 'application/json' 
+                    },
+                    url:'@Url.Action("AddCategory","CategoryAPI")',
+                    type:"POST",
+                    data:JSON.stringify(model),
+                    dataType:"json",
+                    success: function(response){
+                        console.log(response)
+                    },
+                    error : function(request,status,error){
+                        console.log(request.responseText),
+                    },
+                })  
+            });
+        })
+    </script>
+}

@@ -51,16 +51,23 @@ namespace FirstMVCProject.Controllers.APIs
                 return BadRequest();
             }
 
-            _context.Categories.Add(new Category
+            var category = new Category()
             {
                 CategoryName = model.CategoryName,
-                Description=model.Description,
-            });
+                Description = model.Description,
+            };
+
+            _context.Categories.Add(category);
+
 
             try
             {
                 _context.SaveChanges();
-                return Ok("Category added succesfully");
+                return Ok(new
+                {
+                    Message = "Category added succesfully",
+                    Model = category
+                });
             }
             catch (System.Exception ex)
             {
