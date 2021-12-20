@@ -1,7 +1,7 @@
 ﻿@model CategoryViewModel
 <div class="text-danger">
-        <div asp-validation-summary="All"></div>
-    </div>
+    <div asp-validation-summary="All"></div>
+</div>
 <div class="row">
     <div class="col-md-2"></div>
     <div class="col-md-8">
@@ -20,30 +20,34 @@
 
 @section Scripts
 {
-    <script>
-        $(function(){
-            $("#frm_add").submit(function(e){
-                e.preventDefault();
-                var model = {
-                    CategoryName : $("#CategoryName").val(),
-                    Description : $("#Description").val()
-                };
-                $.ajax({
-                    headers: { 'Accept': 'application/json',
-                        'Content-Type': 'application/json' 
-                    },
-                    url:'@Url.Action("AddCategory","CategoryAPI")',
-                    type:"POST",
-                    data:JSON.stringify(model),
-                    dataType:"json",
-                    success: function(response){
-                        console.log(response)
-                    },
-                    error : function(request,status,error){
-                        console.log(request.responseText),
-                    },
-                })  
-            });
-        })
-    </script>
+<script>
+    $(function(){
+        $("#frm_add").submit(function(e){
+            e.preventDefault();
+            var model = {
+                CategoryName : $("#CategoryName").val(),
+                Description : $("#Description").val()
+            };
+            var categoryDetailURL = '@Url.Action("Detail","Category")';
+            $.ajax({
+                headers: { 'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                url:'@Url.Action("AddCategory","CategoryAPI")',
+                type:"POST",
+                data:JSON.stringify(model),
+                dataType:"json",
+                success: function(response){
+                    //alert(response.message);
+                    window.location.href =  `${categoryDetailURL}/${response.model.categoryId}`;
+
+                    //window.location.href = categoryDetailURL + '/' +response.model.categoryId; 
+                },
+                error : function(request,status,error){
+                    console.log(request.responseText);
+                }
+            })
+        });
+    })
+</script>
 }

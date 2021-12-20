@@ -3,29 +3,197 @@
 <div class="row">
     <div class="col-md-2">
         <a class="btn bg-danger" asp-action="Delete" asp-controller="Category" asp-route-categoryId=@Model.CategoryId>Delete</a>
+        <input type="checkbox" id="cb_addProduct" value = "Add product" />
+        <br />
     </div>
+
+<div class="col-md-10" style="display:none" id="div_add">
+        <form id="frm_add">
+          <input type="hidden" asp-for="CategoryId" />
+          <div class="row">
+            <div class="col-md-3">
+              <input type="text" class="form-control" id="txt_productName" placeholder="Product Name">
+            </div>
+            <div class="col-md-3">
+              <input type="number" min ="0" max="9999999" class="form-control" id="txt_productPrice" placeholder="Price">
+            </div>
+          </div>
+          <div class="col-md-4"><input type="submit" class="btn btn-success form-control" value="Add" id="btn_addProduct" /></div>
+        </form>
+</div>
+</div>
+    
+    
     <div class="col-md-8">
         <h5>@Model.CategoryName</h5>
         <h5>@Model.Description</h5>
-        <table>
+        <table class="table-bordered p-1" id="tbl_product" style="text-align:center">
             <thead>
                 <tr>
                     <th>Product Name</th>
+                    <th>UnitPrice</th>
+                    <th>Category</th>
                     <th>Total Order</th>
                     <th>Volume</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="tbl_body">
                 @foreach(var item in Model.Products)
                 {
-                    <tr>
+                    <tr id="row_@item.ProductId">
                         <td><a asp-action="Detail" asp-controller="Product" asp-route-id="@item.ProductId" >@item.ProductName</a></td>
+                        <td>@item.UnitPrice</td>
+                        <td>@item.Category.CategoryName</td>
                         <td>@item.OrderDetails.Count</td>
                         <td>@item.OrderDetails.Sum(x=> x.UnitPrice*x.Quantity* (decimal)(1-x.Discount))</td>
+                        <td><button data-id="@item.ProductId" data-toggle="modal" data-target="#confirm-delete" class="btn_delete"  >Delete</button></td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
     <div class="col-md-2"></div>
-</div>
+
+
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title" id="myModalLabel">Delete confirmation</h4>
+                </div>
+
+                <div class="modal-body">
+                    <p>Product will be deleted.There is no turning back from this action.</p>
+                    <p>Are you sure?</p>
+                    <p class="debug-url"></p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">GiveUp</button>
+                    <a class="btn btn-danger btn-ok">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@section Scripts{
+
+    <script>
+        $("#cb_addProduct").click(function(){
+            $("#div_add").toggle(500);
+        });
+
+        var productID = 0;
+
+        $('.btn_delete').click(function(){
+            productID = $(this).attr("data-id");
+        });
+
+        $('#confirm-delete').on('show.bs.modal', function (e) {
+            $(this).find('.btn_ok').on('click',deleteProduct);
+        });
+
+        function deleteProduct(){
+            console.log(productID);
+            $.ajax({
+                 headers: { 
+                    'Content-Type': 'application/json'
+                }, 
+                url:'@Url.Action("Delete","ProductAPI")'+'/'+productID,
+                type:"POST",
+                dataType:"json",
+                success: function(response){
+                    console.log(response);
+                },
+                error : function(request,status,error){
+                    console.log(request.responseText);
+                }
+            })
+        }   
+        //$("button").click('.btn_delete',function(e) {
+        //    var id = this.id;
+
+        //    //console.log(id);
+        //    $.ajax({
+        //        headers: { 
+        //            'Content-Type': 'application/json'
+        //        }, 
+        //        url:'@Url.Action("Delete","ProductAPI")',
+        //        type:"POST",
+        //        data:JSON.stringify{id:id},
+        //        dataType:"json",
+        //        success: function(response){
+        //            //window.location.href =  `${categoryDetailURL}/${response.model.categoryId}`;
+        //            console.log(response);
+        //            //window.location.href = categoryDetailURL + '/' +response.model.categoryId;
+        //        },
+        //        error : function(request,status,error){
+        //            console.log(request.responseText);
+        //        }
+        //    })
+        //});
+
+        //$("#tbl_product").on('click','.btn_delete',function(){
+        //    $(this).closest('tr').remove();
+        //    console.log(this);
+        //    $(this).click(function(e){
+        //        console.log(e);
+        //    })
+        //});
+
+        $("#frm_add").submit(function(e){
+            e.preventDefault();
+
+            var model = {
+                productName: $("#txt_productName").val(),
+                unitPrice: $("#txt_productPrice").val(),
+                categoryId: $("#CategoryId").val()
+            }
+
+            $.ajax({
+                headers: { 'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                url:'@Url.Action("Add","ProductAPI")',
+                type:"POST",
+                data:JSON.stringify(model),
+                dataType:"json",
+                success: function(response){
+                    //window.location.href =  `${categoryDetailURL}/${response.model.categoryId}`;
+                    console.log(response);
+                    //window.location.href = categoryDetailURL + '/' +response.model.categoryId; 
+                    var model = response.model;
+
+                    var tr = document.createElement("tr");
+                    var td1 = document.createElement("td");
+                    var td2 = document.createElement("td");
+                    var td3 = document.createElement("td");
+                    var td4 = document.createElement("td");
+                    var td5 = document.createElement("td");
+                    var td6 = document.createElement("td");
+                    //var aLink = document.createElement("a");
+
+                    //$(td1).html(model.productName);
+                    $(td2).html(model.unitPrice);
+                    $(td3).html("@Model.CategoryName");
+                    $(td4).html("0");
+                    $(td5).html("0");
+                    var detailUrl = '@Url.Action("Detail","Product")';
+                    var aLink = $("<a></a>").attr("href", `${detailUrl}/${model.productId}`).html(model.productName).appendTo(td1);
+                    //$("<a/>").attr("href",`${detailUrl}/${model.productId}`).text(model.productName);
+                    $(td1).append(aLink);
+
+                    $(tr).append(td1).append(td2).append(td3).append(td4).append(td5).appendTo("#tbl_body");
+                },
+                error : function(request,status,error){
+                    console.log(request.responseText);
+                }
+            })
+            console.log(model);
+        })
+
+        
+
+    </script>
+}
