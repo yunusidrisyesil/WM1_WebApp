@@ -1,0 +1,18 @@
+﻿@*
+    view imports
+*@
+
+@model List<Product>
+
+@*
+    view starts
+*@
+
+@foreach (var item in Model)
+{
+    <p>
+    @item.Id - @item.Name - @($"{item.Price:c2}")
+    </p>
+}
+
+
