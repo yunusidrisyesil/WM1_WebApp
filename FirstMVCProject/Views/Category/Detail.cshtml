@@ -88,10 +88,11 @@
 
         $('.btn_delete').click(function(){
             productID = $(this).attr("data-id");
+           // console.log(productID);
         });
 
         $('#confirm-delete').on('show.bs.modal', function (e) {
-            $(this).find('.btn_ok').on('click',deleteProduct);
+            $(this).find('.btn-ok').on('click',deleteProduct);
         });
 
         function deleteProduct(){
