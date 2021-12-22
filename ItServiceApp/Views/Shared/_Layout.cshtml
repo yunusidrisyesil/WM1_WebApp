@@ -28,8 +28,55 @@
 
 </head>
 <body>
-    <div>
-        @RenderBody()
+    <!--====== Preloader Start ======-->
+    <div id="preloader">
+        <div class="loader-cubes">
+            <div class="loader-cube1 loader-cube"></div>
+            <div class="loader-cube2 loader-cube"></div>
+            <div class="loader-cube4 loader-cube"></div>
+            <div class="loader-cube3 loader-cube"></div>
+        </div>
     </div>
+    <!--====== Preloader End ======-->
+
+    <!--====== Header Part Start ======-->
+    <partial name="Partials/_HeaderPartial" />
+    <!--====== Header Part End ======-->
+
+
+    @RenderBody()
+
+    <!--====== Back to top start ======-->
+    <div class="back-to-top">
+        <a href="#"> <i class="fas fa-arrow-up"></i> </a>
+    </div>
+    <!--====== Back to top start ======-->
+
+    <!--====== Footer PART START ======-->
+    <partial name="Partials/_FooterPartial"/>
+    <!--====== Footer PART ENDS ======-->
+
+    <!--====== Jquery ======-->
+    <script src="assets/js/jquery-1.12.4.min.js"></script>
+    <!--====== Bootstrap ======-->
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <!--====== Slick slider ======-->
+    <script src="assets/js/slick.min.js"></script>
+    <!--====== Magnific ======-->
+    <script src="assets/js/jquery.magnific-popup.min.js"></script>
+    <!--====== Isotope ======-->
+    <script src="assets/js/isotope.pkgd.min.js"></script>
+    <!--====== Imagesloaded ======-->
+    <script src="assets/js/imagesloaded.pkgd.min.js"></script>
+    <!--====== Inview ======-->
+    <script src="assets/js/jquery.inview.min.js"></script>
+    <!--====== Easy Pie Chart ======-->
+    <script src="assets/js/jquery.easypiechart.min.js"></script>
+    <!--====== Syotimer ======-->
+    <script src="assets/js/jquery.syotimer.min.js"></script>
+    <!--====== Wow ======-->
+    <script src="assets/js/wow.min.js"></script>
+    <!--====== Main JS ======-->
+    <script src="assets/js/main.js"></script>
 </body>
 </html>
