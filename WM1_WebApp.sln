@@ -5,7 +5,9 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FirstMVCProject", "FirstMVCProject\FirstMVCProject.csproj", "{E299BFA5-B7A8-4BB3-A079-C1E27EBA2176}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LayoutUsage", "LayoutUsage\LayoutUsage.csproj", "{3610865F-BD9A-4EEA-AA88-6FF04C32F24C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LayoutUsage", "LayoutUsage\LayoutUsage.csproj", "{3610865F-BD9A-4EEA-AA88-6FF04C32F24C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItServiceApp", "ItServiceApp\ItServiceApp.csproj", "{F8099141-0BC7-4339-ABB8-755A1EEF4E05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{3610865F-BD9A-4EEA-AA88-6FF04C32F24C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3610865F-BD9A-4EEA-AA88-6FF04C32F24C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3610865F-BD9A-4EEA-AA88-6FF04C32F24C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8099141-0BC7-4339-ABB8-755A1EEF4E05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8099141-0BC7-4339-ABB8-755A1EEF4E05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8099141-0BC7-4339-ABB8-755A1EEF4E05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8099141-0BC7-4339-ABB8-755A1EEF4E05}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
