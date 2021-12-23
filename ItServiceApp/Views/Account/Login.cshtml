@@ -1,0 +1,62 @@
+﻿@model LoginViewModel
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<!--====== Page Title start ======-->
+<section class="page-title-area">
+    <div class="container">
+        <h2 class="title">Login</h2>
+        <ul class="breadcrumb-nav">
+            <li><a asp-controller="Home" asp-action="Index">Login Page</a></li>
+            <li class="active">@ViewBag.Title</li>
+        </ul>
+    </div>
+</section>
+<!--====== Page Title End ======-->k
+
+
+
+<!--====== Shoping Checkout Start  ======-->
+<section class="shoping-checkout-area section-gap">
+    <div class="container">
+        <form asp-action="Login" asp-controller="Account" method="post">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="billing-details">
+                        <h3 class="title">Login Form</h3>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label asp-for="UserName"></label>
+                                    <input asp-for="UserName">
+                                    <span asp-validation-for="UserName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label asp-for="Password"></label>
+                                    <input asp-for="Password">
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label asp-for="RememberMe"></label>
+                                    <input asp-for="RememberMe">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-success">Button</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+

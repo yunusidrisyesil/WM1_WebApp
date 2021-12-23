@@ -5,6 +5,7 @@ namespace ItServiceApp.ViewModels
     public class RegisterViewModel
     {
         [Required(ErrorMessage = "Username is required")]
+        [Display(Name = "Username")]
         public string UserName { get; set; }
         [Required(ErrorMessage ="Name is required")]
         [Display(Name="Name")]
@@ -16,6 +17,7 @@ namespace ItServiceApp.ViewModels
         public string Surname { get; set; }
         [Required(ErrorMessage = "Email is required")]
         [Display(Name = "Email")]
+        [EmailAddress]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Password is required")]

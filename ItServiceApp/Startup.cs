@@ -41,14 +41,16 @@ namespace ItServiceApp
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 options.Lockout.MaxFailedAccessAttempts = 3;
                 options.Lockout.AllowedForNewUsers = false;
-                
+
+                options.User.AllowedUserNameCharacters =
+                    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
                 options.User.RequireUniqueEmail = true;
-            });
+            }).AddEntityFrameworkStores<MyContext>();
 
             services.ConfigureApplicationCookie(options => {
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
                 options.LoginPath = "/Account/Login";
-                options.LogoutPath = "/Account/AccessDenied";
+                options.LogoutPath = "/Account/Logout";
                 options.SlidingExpiration = true;
             });
         }
@@ -63,9 +65,9 @@ namespace ItServiceApp
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseAuthentication();
             app.UseRouting();
-
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
