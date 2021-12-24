@@ -1,8 +1,12 @@
-﻿using ItServiceApp.Models.Identity;
+﻿using ItServiceApp.Models;
+using ItServiceApp.Models.Identity;
+using ItServiceApp.Services;
 using ItServiceApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ItServiceApp.Controllers
@@ -12,12 +16,31 @@ namespace ItServiceApp.Controllers
 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly IEmailSender _emailSender;
 
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager, IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
+            checkRoles();
+            _emailSender = emailSender;
+        }
+
+        private void checkRoles()
+        {
+            foreach (var rolName in RoleModels.Roles)
+            {
+                if (!_roleManager.RoleExistsAsync(rolName).Result)
+                {
+                    var result = _roleManager.CreateAsync(new ApplicationRole()
+                    {
+                        Name = rolName,
+                    }).Result;
+                }
+            }
         }
 
         [HttpGet]
@@ -56,13 +79,19 @@ namespace ItServiceApp.Controllers
                 Email = model.Email,
             };
 
-            var result = await _userManager.CreateAsync(user,model.Password);
-            if (result.Succeeded) {
+            var result = await _userManager.CreateAsync(user, model.Password);
+            if (result.Succeeded)
+            {
+
+                var count = _userManager.Users.Count();
+                result = await _userManager.AddToRoleAsync(user, count == 1 ? RoleModels.Admin : RoleModels.User);
+
                 //Kullanıcıya rol atama
                 //Email onay maili
                 //Login sayfasına yönlendirme
 
-                return RedirectToAction("Index", "Home");
+
+                return RedirectToAction("Login", "Account");
             }
             else
             {
@@ -84,11 +113,19 @@ namespace ItServiceApp.Controllers
             {
                 return View(model);
             }
-            
-            var result = await _signInManager.PasswordSignInAsync(model.UserName,model.Password,model.RememberMe,true);
+
+            var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, true);
 
             if (result.Succeeded)
             {
+                //var user = await _userManager.FindByNameAsync(model.UserName);
+
+                //await _emailSender.SendAsync(new EmailMessage()
+                //{
+                //    Contacts = new string[] { "yunusyesil85@gmail.com" },
+                //    Subject = $"{user.UserName} - User Login",
+                //    Body = $"{user.Name} {user.Surname} named user {DateTime.Now:g} logined"
+                //});
                 return RedirectToAction("Index", "Home");
             }
             else

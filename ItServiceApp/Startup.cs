@@ -1,5 +1,6 @@
 using ItServiceApp.Data;
 using ItServiceApp.Models.Identity;
+using ItServiceApp.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -27,6 +28,8 @@ namespace ItServiceApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddTransient<IEmailSender,EmailSender>();
+
             services.AddDbContext<MyContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("SqlConnection"));
@@ -51,6 +54,7 @@ namespace ItServiceApp
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
                 options.LoginPath = "/Account/Login";
                 options.LogoutPath = "/Account/Logout";
+                options.AccessDeniedPath = "/Account/AccessDenied";
                 options.SlidingExpiration = true;
             });
         }
@@ -65,9 +69,9 @@ namespace ItServiceApp
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseAuthentication();
             app.UseRouting();
-            app.UseAuthorization();
+            app.UseAuthentication(); //Login logout kullanabilmek için
+            app.UseAuthorization(); //authorization attribute kullanabilmek için
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
