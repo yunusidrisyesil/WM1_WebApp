@@ -1,12 +1,16 @@
-﻿using ItServiceApp.Models;
+﻿using ItServiceApp.Extensions;
+using ItServiceApp.Models;
 using ItServiceApp.Models.Identity;
 using ItServiceApp.Services;
 using ItServiceApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using System;
 using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 namespace ItServiceApp.Controllers
@@ -83,15 +87,20 @@ namespace ItServiceApp.Controllers
             if (result.Succeeded)
             {
                 var count = _userManager.Users.Count();
-                result = await _userManager.AddToRoleAsync(user, count == 1 ? RoleModels.Admin : RoleModels.User);
+                await _userManager.AddToRoleAsync(user, count == 1 ? RoleModels.Admin : RoleModels.Passive);
 
-                await _emailSender.SendAsync(new EmailMessage()
+                //Email confirmation
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Scheme);
+
+                var emailMessage = new EmailMessage()
                 {
                     Contacts = new string[] { user.Email },
-                    Subject = $"{user.UserName} - ItService Register",
-                    Body = $"{user.Name} {user.Surname} named user registered to the system at {DateTime.Now:g}"
-                });
-
+                    Body = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Click Here</a>",
+                    Subject = "Confirm Your Email"
+                };
+                await _emailSender.SendAsync(emailMessage);
                 return RedirectToAction("Login", "Account");
             }
             else
@@ -144,5 +153,117 @@ namespace ItServiceApp.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (userId == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{userId}'.");
+            }
+            code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+            ViewBag.StatueMessage = result.Succeeded ? "Thank you for confirming your email." : "Error conforming your email.";
+
+            if (result.Succeeded && _userManager.IsInRoleAsync(user, RoleModels.Passive).Result)
+            {
+                await _userManager.RemoveFromRoleAsync(user, RoleModels.Passive);
+                await _userManager.AddToRoleAsync(user, RoleModels.User);
+            }
+            return View();
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _userManager.FindByIdAsync(HttpContext.GetUserId());
+
+            var model = new UserProfileViewModel
+            {
+                Name = user.Name,
+                Surname = user.Surname,
+                Email = user.Email
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Profile(UserProfileViewModel model)
+        {
+
+            var user = await _userManager.FindByIdAsync(HttpContext.GetUserId());
+
+            user.Name = model.Name;
+            user.Surname = model.Surname;
+            if (user.Email != model.Email)
+            {
+                await _userManager.RemoveFromRoleAsync(user, RoleModels.User);
+                await _userManager.AddToRoleAsync(user, RoleModels.Passive);
+                user.Email = model.Email;
+                user.EmailConfirmed = false;
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Scheme);
+
+                var emailMessage = new EmailMessage()
+                {
+                    Contacts = new string[] { user.Email },
+                    Body = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Click Here</a>",
+                    Subject = "Confirm Your Email"
+                };
+                await _emailSender.SendAsync(emailMessage);
+
+
+            }
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError(string.Empty, ModelState.ToFullErrorString());
+            }
+
+            return View(model);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult UpdatePassword()
+        {
+            return View();
+        }
+
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> UpdatePassword(PasswordChangeViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = await _userManager.FindByIdAsync(HttpContext.GetUserId());
+
+            var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+
+            if (result.Succeeded)
+            {
+                ViewBag.Message = "Password updated succesfuly";
+            }
+            else
+            {
+                ViewBag.Message = $"An error occured : {ModelState.ToFullErrorString()}";
+            }
+
+            return RedirectToAction("Profile");
+        }
     }
+
 }

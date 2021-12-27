@@ -1,0 +1,65 @@
+﻿@model UserProfileViewModel
+@{
+    ViewBag.Title = $"{Model.Name} {Model.Surname} Profile Page";
+}
+
+<!--====== Page Title start ======-->
+<partial name="Partials/_PageTitlePartial" />
+<!--====== Page Title End ======-->
+
+
+<!--====== Shoping Checkout Start  ======-->
+<section class="shoping-checkout-area section-gap">
+    <div class="container">
+        <div class="user-actions mb-40">
+        </div>
+        <form asp-action="Profile" asp-controller="Account" method="post">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="billing-details">
+                        <h3 class="title">Profile</h3>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label asp-for="Name"></label>
+                                    <input asp-for="Name">
+                                    <span asp-validation-for="Surname" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label asp-for="Surname"></label>
+                                    <input asp-for="Surname">
+                                    <span asp-validation-for="Surname" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label asp-for="Email"></label>
+                                    <input asp-for="Email">
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <button type="submit" class="btn btn-success" value="Button">Update</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+<!--====== Shoping Checkout End ======-->
+@section Styles{
+    <style>
+        input {
+            border: solid 1px #e3eeff;
+            height: 50px;
+            padding: 0 15px;
+        }
+    </style>
+}
