@@ -82,14 +82,15 @@ namespace ItServiceApp.Controllers
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
-
                 var count = _userManager.Users.Count();
                 result = await _userManager.AddToRoleAsync(user, count == 1 ? RoleModels.Admin : RoleModels.User);
 
-                //Kullanıcıya rol atama
-                //Email onay maili
-                //Login sayfasına yönlendirme
-
+                await _emailSender.SendAsync(new EmailMessage()
+                {
+                    Contacts = new string[] { user.Email },
+                    Subject = $"{user.UserName} - ItService Register",
+                    Body = $"{user.Name} {user.Surname} named user registered to the system at {DateTime.Now:g}"
+                });
 
                 return RedirectToAction("Login", "Account");
             }
