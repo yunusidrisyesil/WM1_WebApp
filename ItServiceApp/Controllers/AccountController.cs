@@ -336,14 +336,12 @@ namespace ItServiceApp.Controllers
             {
                 //Send email for password change
                 TempData["Message"] = "Password changed successfully";
-                ViewBag.Message = "Password changed successfully";
                 return View();
             }
             else
             {
                 var message = string.Join("<br>", result.Errors.Select(x => x.Description));
                 TempData["Message"] = message;
-                ViewBag.Message = "Password changed successfully";
                 return View();
             }
         }

@@ -1,4 +1,5 @@
 using ItServiceApp.Data;
+using ItServiceApp.MapperProfiles;
 using ItServiceApp.Models.Identity;
 using ItServiceApp.Services;
 using Microsoft.AspNetCore.Builder;
@@ -29,7 +30,12 @@ namespace ItServiceApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddTransient<IEmailSender,EmailSender>();
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddAutoMapper(options =>
+            {
+                options.AddProfile<PaymentProfile>();
+                //options.AddProfile(typeof(PaymentProfile));
+            });
 
             services.AddDbContext<MyContext>(options =>
             {
@@ -52,7 +58,8 @@ namespace ItServiceApp
                 //options.SignIn.RequireConfirmedEmail = true;
             }).AddEntityFrameworkStores<MyContext>().AddDefaultTokenProviders();
 
-            services.ConfigureApplicationCookie(options => {
+            services.ConfigureApplicationCookie(options =>
+            {
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
                 options.LoginPath = "/Account/Login";
                 options.LogoutPath = "/Account/Logout";
