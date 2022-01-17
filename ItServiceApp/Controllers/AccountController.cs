@@ -256,14 +256,99 @@ namespace ItServiceApp.Controllers
             if (result.Succeeded)
             {
                 ViewBag.Message = "Password updated succesfuly";
+                return RedirectToAction(nameof(Logout));
             }
             else
             {
                 ViewBag.Message = $"An error occured : {ModelState.ToFullErrorString()}";
             }
 
-            return RedirectToAction("Profile");
+            return RedirectToAction(nameof(Profile));
         }
+
+        [AllowAnonymous]
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if(user == null)
+            {
+                ViewBag.Message = "Email not found";
+            }
+            else
+            {
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                var callbackUrl = Url.Action("ConfirmResetPassword", "Account", new { userID = user.Id, code = code }, protocol: Request.Scheme);
+                var emailMessage = new EmailMessage()
+                {
+                    Contacts = new[] { user.Email },
+                    Body = $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Click Here </a>",
+                    Subject = "Reset Password"
+                };
+                await _emailSender.SendAsync(emailMessage);
+                ViewBag.Message = "Password change mail sent to your email";
+            }
+            return View();
+        }
+
+        [AllowAnonymous]
+        public IActionResult ConfirmResetPassword(string userID,string code)
+        {
+            if(string.IsNullOrEmpty(userID) || string.IsNullOrEmpty(code))
+            {
+                return BadRequest("Error");
+            }
+
+            ViewBag.Code = code;
+            ViewBag.UserID = userID;
+
+            return View();
+        }
+
+        [AllowAnonymous,HttpPost]
+        public async Task<IActionResult> ConfirmResetPasswordAsync(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await _userManager.FindByIdAsync(model.UserID);
+
+            if(user == null)
+            {
+                ModelState.AddModelError(string.Empty, "User not found");
+                return View();
+            }
+
+            var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(model.Code));
+
+            var result = await _userManager.ResetPasswordAsync(user, code, model.NewPassword);
+
+            if (result.Succeeded)
+            {
+                //Send email for password change
+                TempData["Message"] = "Password changed successfully";
+                ViewBag.Message = "Password changed successfully";
+                return View();
+            }
+            else
+            {
+                var message = string.Join("<br>", result.Errors.Select(x => x.Description));
+                TempData["Message"] = message;
+                ViewBag.Message = "Password changed successfully";
+                return View();
+            }
+        }
+
+
     }
 
 }

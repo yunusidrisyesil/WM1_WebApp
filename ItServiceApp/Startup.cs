@@ -40,7 +40,7 @@ namespace ItServiceApp
                 options.Password.RequireUppercase = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequiredLength = 5;
-                options.Password.RequireDigit = true;
+                options.Password.RequireDigit = false;
 
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 options.Lockout.MaxFailedAccessAttempts = 3;
