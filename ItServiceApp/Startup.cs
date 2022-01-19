@@ -30,7 +30,8 @@ namespace ItServiceApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IEmailSender, EmailSender>(); //loose coupling
+            services.AddScoped<IPaymentService, IyzicoPaymentService>(); //loose coupling
             services.AddAutoMapper(options =>
             {
                 options.AddProfile<PaymentProfile>();
