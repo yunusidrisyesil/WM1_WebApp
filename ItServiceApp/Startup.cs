@@ -88,6 +88,12 @@ namespace ItServiceApp
                         name: "default",
                         pattern: "{controller=Home}/{action=index}/{id?}"
                     );
+
+                endpoints.MapAreaControllerRoute(
+                    name: "admin",
+                    areaName:"Admin",
+                    pattern: "Admin/{controller=Manage}/{action=Index}/{id?}"
+                  );
             });
         }
     }
