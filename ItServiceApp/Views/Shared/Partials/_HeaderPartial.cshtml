@@ -108,18 +108,19 @@
                                 <li>
                                     <a href="#">@User.Identity.Name</a>
                                     <ul class="submenu">
-                                        <li><a asp-action="Profile" asp-controller="Account" >Settings</a></li>
+                                        <li><a asp-action="Profile" asp-controller="Account">Settings</a></li>
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <li>
+                                                <a asp-action="Index" asp-controller="Admin">Go To Admin Page</a>
+                                            </li>
+                                        }
                                     </ul>
                                 </li>
                             </ul>
                         </div>
 
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <div class="navbar-btn">
-                                    <a>Go To Admin Page</a>
-                            </div>
-                        }
+
 
                         <div class="navbar-btn">
                             <a asp-action="Logout" asp-controller="Account">Logout <i class="fal fa-long-arrow-right"></i></a>
