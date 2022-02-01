@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ItServiceApp.Areas.Admin.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = "Admin")]
     public class ManageController : Controller
     {
         public IActionResult Index()
@@ -12,6 +12,11 @@ namespace ItServiceApp.Areas.Admin.Controllers
         }
 
         public IActionResult Users()
+        {
+            return View();
+        }
+
+        public IActionResult SubscriptionTypes()
         {
             return View();
         }
