@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,14 +32,19 @@ namespace ItServiceApp
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
             services.AddTransient<IEmailSender, EmailSender>(); //loose coupling
             services.AddScoped<IPaymentService, IyzicoPaymentService>(); //loose coupling
             services.AddAutoMapper(options =>
             {
                 options.AddProfile<PaymentProfile>();
                 //options.AddProfile(typeof(PaymentProfile));
+                options.AddProfile<EntityProfile>();
             });
+
 
             services.AddDbContext<MyContext>(options =>
             {
