@@ -20,9 +20,7 @@ namespace ItServiceApp.Controllers
 
         public IActionResult Index()
         {
-            var model = _dbContext.SubscriptionTypes.OrderBy(x => x.Price).ToList()
-                        .Select(x => _mapper.Map<SubscriptionTypeViewModel>(x)).ToList();
-            return View(model);
+            return View();
         }
     }
 }
